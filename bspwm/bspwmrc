@@ -1,0 +1,85 @@
+#! /bin/sh
+
+#--------swap CapsLock and Esc
+xmodmap -e "clear Lock"         #or xmodmap -e "remove Lock = Caps_Lock"
+xmodmap -e "keycode 66 = Escape"
+xmodmap -e "keycode 9 = Caps_Lock"
+xmodmap -e "keycode 65 = space"
+xmodmap -e "add Lock = Caps_Lock"
+
+#--------SpeedUp keyboard
+xset r rate 190 40
+#--------Don't let computer sleep
+xset s 0 0
+xset s off
+#--------Wallpaper
+xwallpaper --focus ~/.config/Wallpaper/wall.jpg
+
+# to fix java applications
+wmname LG3D
+
+
+
+launch sxhkd
+pgrep -x sxhkd > /dev/null || sxhkd &
+
+# for Notifications
+dunst &
+
+#launch polybar
+$HOME/.config/polybar/launch.sh
+
+
+
+#set desktops
+# bspc monitor -d I II III IV V VI VII VIII IX
+# bspc monitor -d     ♪          
+# 𝟣 𝟤 𝟥 𝟦 𝟧 𝟨 𝟩 𝟪 𝟫
+bspc monitor -d   3 4  6 7  
+
+
+#window settings
+bspc config border_width			1
+bspc config window_gap				10
+bspc config top_padding				10
+# colors
+bspc config normal_border_color  "#1C1C1C"
+bspc config urgent_border_color  "#ac8a8c"
+bspc config focused_border_color "#505555"
+
+bspc config split_ratio				0.5
+bspc config borderless_monocle		true
+bspc config gapless_monocle			true
+bspc config focus_follows_pointer	true
+
+# colors
+#source ~/.config/bspwm/theme
+
+# bspc rule -a Gimp desktop='^8' state=floating follow=on
+# bspc rule -a mplayer2 state=floating
+# bspc rule -a Kupfer.py focus=on
+# bspc rule -a Screenkey manage=off
+bspc rule -a Gnome-calculator state=floating
+bspc rule -a Firefox desktop='^8' follow=on focus=on
+bspc rule -a mpv state=floating follow=on focus=on
+
+bspc rule -a discord desktop='^7' follow=on focus=on
+bspc rule -a Telegram-desktop desktop='^7' follow=on focus=on
+bspc rule -a zoom desktop='^7' follow=on focus=on
+bspc rule -a Caprine desktop='^7' state=floating focus=on
+
+bspc rule -a Eog state=floating follow=on focus=on
+bspc rule -a nomacs state=floating follow=on focus=on
+bspc rule -a settings state=floating follow=on focus=on
+bspc rule -a Guvcview tate=floating follow=on focus=on
+bspc rule -a Stremio desktop='^6' follow=on focus=on
+bspc rule -a Gpick state=floating focus=on
+
+
+#window rules
+bspc rule -a Nitrogen state=floating follow=on
+bspc rule -a Nm-connection-editor state=floating follow=on
+bspc rule -a Pavucontrol state=floating follow=on
+bspc rule -a Blueberry.py state=floating follow=on
+bspc rule -a Iwgtk state=floating follow=on
+bspc rule -a Steam desktop='^4' state=floating follow=on

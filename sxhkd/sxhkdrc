@@ -1,0 +1,207 @@
+#
+# wm independent hotkeys
+#
+
+# terminal emulator
+super + Return
+	tilix
+
+# program launcher
+super + d
+	rofi -show drun -show-icons
+
+# # power menu
+# super + p
+# 	rofi -show power-menu -modi power-menu:rofi-power-menu
+
+# app switcher
+alt + tab
+	rofi -show window
+
+
+# #clipboard
+# super + v
+#         roficlip
+
+# #passwords
+# super + shift + b
+#         bwmenu
+
+#screenshot
+Print
+		flameshot gui -p $HOME/storeDrive/storeDriveBig/Pictures/ScreenShots/flameShot/
+shift + Print
+		flameshot full -p $HOME/storeDrive/storeDriveBig/Pictures/ScreenShots/flameShot/
+
+
+# # make sxhkd reload its configuration files:
+# super + Escape
+# 	pkill -USR1 -x sxhkd
+
+#
+# bspwm hotkeys
+#
+
+# quit/restart bspwm
+super + alt + {q,r}
+	bspc {quit,wm -r}
+
+# close and kill
+super + shift + {_,ctrl + }c
+	bspc node -{c,k}
+
+# alternate between the tiled and monocle layout
+super + m
+	bspc desktop -l next
+
+# # send the newest marked node to the newest preselected node
+# super + y
+# 	bspc node newest.marked.local -n newest.!automatic.local
+
+# swap the current node and the biggest window
+super + g
+	bspc node -s biggest.window
+
+#
+# state/flags
+#
+
+# set the window state
+super + {t,shift + t,y}
+	bspc node -t {tiled,pseudo_tiled,floating}
+# toggle fullscreen
+super + f
+  bspc node -t '~fullscreen'
+
+# set the node flags
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+# stick and unsticky
+super + s
+	bash $HOME/.config/sxhkd/scripts/sticky.sh& bspc node -g sticky
+super + S
+	bspc node -g sticky && kill $(ps aux | grep "bash sticky.sh" | awk 'FNR == 1 {print $2}')
+
+#
+# focus/swap
+#
+
+# focus the node in the given direction
+super + {_,shift + }{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus the node for the given path jump
+super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+# focus the next/previous window in the current desktop
+alt + {_,shift + }Tab
+	bspc node -f {next,prev}.local.!hidden.window
+
+# focus the next/previous desktop in the current monitor
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+# focus the last node/desktop
+super + Tab
+	bspc desktop -f last
+
+# focus the older or newer node in the focus history
+super + {o,i}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+# focus or send to the given desktop
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+#
+# preselect
+#
+
+# preselect the direction
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+# preselect the ratio
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+# cancel the preselection for the focused node
+super + ctrl + space
+	bspc node -p cancel
+
+# cancel the preselection for the focused desktop
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+#
+# move/resize
+#
+
+# expand a window by moving one of its side outward
+super + alt + {h,j,k,l}
+	  {bspc node -z right -20 0; \
+	  bspc node -z left +20 0, \
+	  bspc node -z top 0 -20; \
+	  bspc node -z bottom 0 +20, \
+	  bspc node -z top 0 +20; \
+	  bspc node -z bottom 0 -20, \
+	  bspc node -z right +20 0; \
+	  bspc node -z left -20 0}
+
+# contract a window by moving one of its side inward
+super + alt + shift + {l,k,j,h}
+	bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+
+# move a floating window
+super + {Left,Down,Up,Right}
+	bspc node -v {-20 0,0 20,0 -20,20 0}
+
+#picture-in-picture
+super + control + p {
+      bspc node -t floating
+      bspc node -z bottom_right -2000 -1000
+      bspc node -z bottom_right 426 240
+}
+
+
+# volume
+XF86AudioLowerVolume
+	  pactl set-sink-volume 0 -5%; killall -q polybar && polybar --reload bspwm &
+XF86AudioRaiseVolume
+	  pactl set-sink-volume 0 +5% ; killall -q polybar && polybar --reload bspwm &
+XF86AudioMute
+	  pactl set-sink-mute 0 toggle ; killall -q polybar && polybar --reload bspwm &
+
+# screen lock
+super + x
+	  slock & xset dpms force off; mpc pause
+
+# brightness
+XF86MonBrightnessUp
+	  light -A 1
+XF86MonBrightnessDown
+	  light -U 1
+F2
+	  light -A 1
+F1
+	  light -U 1
+
+# close window
+super + shift + q
+  bspc node -c
+# kill window
+
+ctrl + shift + super + q
+  xkill
+
+super + q
+	echo "wow"
+
+load startup script
+
+F8
+  bash $HOME/codeDNA/confiFILES/system/makeEasy/startUP.sh
